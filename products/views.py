@@ -23,8 +23,6 @@ from fake_useragent import UserAgent
 # Local imports
 from .models import Product
 from .serializers import ProductsSerializer
-from parsing_project.bot import run_bot
-
 
 class ProductsListView(APIView):
     def get(self, request):
@@ -63,13 +61,13 @@ def generate_link(product_count: int = 10) -> int:
     calculated_page = math.ceil(product_count / 36)
     return f"https://www.ozon.ru/seller/proffi-1/products/?miniapp=seller_1&page={calculated_page}"
 
+@shared_task
 def parse_ozon_products(products_count=10):
     
     ua = UserAgent()
     user_agent = ua.random
     chrome_options = Options()
     chrome_options.add_argument("--headless")    
-    
     chrome_options.add_argument(f"user-agent={user_agent}")
     
     with open('products/index.html', '+r', encoding='utf-8') as file:
