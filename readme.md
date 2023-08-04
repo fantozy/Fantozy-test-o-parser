@@ -23,3 +23,8 @@ docker run -e MYSQL_ROOT_PASSWORD=1234 -p 3307:3306 --name=scraperdb -v mysqlvol
 ```
 docker run -p 8001:8000 --network trenbolone -d tren
 ```
+
+## Run bot.py in tren
+```
+python3 bot.py 
+```
