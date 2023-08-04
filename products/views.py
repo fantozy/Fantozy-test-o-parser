@@ -23,6 +23,9 @@ from fake_useragent import UserAgent
 # Local imports
 from .models import Product
 from .serializers import ProductsSerializer
+from bot import finished_parsing
+
+from asgiref.sync import async_to_sync
 
 class ProductsListView(APIView):
     def get(self, request):
@@ -36,11 +39,12 @@ class ProductsListView(APIView):
             parsed_products = parse_ozon_products(50)
         else:
             parsed_products = parse_ozon_products(products_count)
-        print(parsed_products)
         serializer = ProductsSerializer(data=parsed_products, many=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            finished = async_to_sync(finished_parsing)
+            finished(products_count)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     
@@ -70,8 +74,6 @@ def parse_ozon_products(products_count=10):
     chrome_options.add_argument("--headless")    
     chrome_options.add_argument(f"user-agent={user_agent}")
     
-    with open('products/index.html', '+r', encoding='utf-8') as file:
-        page_src = file.read()
         
         
     driver = webdriver.Chrome(options=chrome_options)
@@ -101,7 +103,7 @@ def parse_ozon_products(products_count=10):
     
     page_source = driver.page_source
 
-    soup = BeautifulSoup(page_src, 'lxml')
+    soup = BeautifulSoup(page_source, 'lxml')
     products = (
         soup.find("div", attrs={"id": "paginatorContent"})
         .find("div")
