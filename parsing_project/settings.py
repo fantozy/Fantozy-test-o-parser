@@ -85,10 +85,10 @@ WSGI_APPLICATION = 'parsing_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'products',  
-        'USER': 'Fantozy',  
+        'NAME': 'tren',
+        'USER': 'root',  
         'PASSWORD': '1234',  
-        'HOST': 'localhost',  
+        'HOST': '172.27.0.1',  
         'PORT': '3307',
     }
 }
