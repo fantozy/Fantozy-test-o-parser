@@ -1,8 +1,11 @@
-## Setup database and network
+## Git clone
 
 ```
 git clone https://github.com/fantozy/Fantozy-test-o-parser
+
 ```
+
+## Setup database and network
 
 ```
 docker volume create mysqlvol
